@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="card auth-card">
+      <h1>Login</h1>
+
+      <form id="login-form">
+        <input
+          id="email"
+          type="email"
+          placeholder="E-mail"
+          required
+        >
+
+        <input
+          id="password"
+          type="password"
+          placeholder="Senha"
+          required
+        >
+
+        <button type="submit">Entrar</button>
+
+        <!-- Mensagem de erro -->
+        <p
+          id="login-error"
+          style="display:none; margin-top:12px; color:#ff4d4d; font-size:14px;"
+        ></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS do login -->
+  <script src="/public/js/login.js"></script>
+</body>
+</html>

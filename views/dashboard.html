@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="card" style="max-width: 720px; margin: 60px auto; padding: 24px;">
+      <h1>Dashboard</h1>
+      <p>Você está autenticado. Este dashboard é temporário para testar proteção e logout.</p>
+
+      <button id="btn-logout" type="button" style="margin-top:16px;">
+        Sair
+      </button>
+    </div>
+  </div>
+
+  <!-- 1) Protege a página -->
+  <script src="/public/js/auth-guard.js"></script>
+
+  <!-- 2) Logout -->
+  <script src="/public/js/logout.js"></script>
+</body>
+</html>
