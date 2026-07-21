@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <link rel="stylesheet" href="/public/css/style.css">
 </head>
@@ -11,32 +12,41 @@
       <h1>Login</h1>
 
       <form id="login-form">
-        <input
-          id="email"
-          type="email"
-          placeholder="E-mail"
-          required
-        >
+        <input id="email" type="email" placeholder="E-mail" required>
 
-        <input
-          id="password"
-          type="password"
-          placeholder="Senha"
-          required
-        >
+        <div class="password-wrapper">
+          <input id="password" type="password" placeholder="Senha" required>
 
-        <button type="submit">Entrar</button>
+          <button 
+            id="toggle-password" 
+            class="toggle-password" 
+            type="button"
+          >
+            Mostrar
+          </button>
+        </div>
 
-        <!-- Mensagem de erro -->
-        <p
-          id="login-error"
-          style="display:none; margin-top:12px; color:#ff4d4d; font-size:14px;"
-        ></p>
+        <label class="lgpd-label">
+          <input id="lgpd-consent" type="checkbox">
+          <span>
+            Declaro estar ciente de que meus dados serão utilizados para acesso e operação do sistema de gestão da academia.
+          </span>
+        </label>
+
+        <button type="submit" class="btn btn-large">Entrar</button>
+
+        <p class="auth-footer">
+          Não tem conta?
+          <a href="/views/cadastro.html">Criar conta</a>
+        </p>
+
+        <p id="login-error"
+           style="display:none; margin-top:12px; color:#ff4d4d; font-size:14px;"></p>
       </form>
     </div>
   </div>
 
-  <!-- JS do login -->
+  <script src="/public/js/config.js"></script>
   <script src="/public/js/login.js"></script>
 </body>
 </html>

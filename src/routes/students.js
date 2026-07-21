@@ -55,6 +55,7 @@ router.get("/", auth, async (req, res) => {
         s.email,
         s.plan_id AS plano_id,
         p.nome AS plano_nome,
+        p.valor_mensal AS plano_valor_mensal,
         s.data_inicio,
         s.ativo,
         s.created_at
@@ -90,9 +91,10 @@ router.get("/:id", auth, async (req, res) => {
         s.cpf,
         s.telefone,
         s.email,
-        s.plan_id AS plano_id,
-        p.nome AS plano_nome,
-        s.data_inicio,
+s.plan_id AS plano_id,
+p.nome AS plano_nome,
+p.valor_mensal AS plano_valor_mensal,
+s.data_inicio,
         s.ativo,
         s.created_at
       FROM public.students s

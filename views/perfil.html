@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil</title>
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-title">Gestão Academia</span>
+      </div>
+
+      <nav class="sidebar-nav">
+<nav class="sidebar-nav">
+  <a class="nav-link" href="/views/dashboard.html">Dashboard</a>
+  <a class="nav-link" href="/views/planos.html">Planos</a>
+  <a class="nav-link" href="/views/alunos.html">Alunos</a>
+  <a class="nav-link" href="/views/financeiro.html">Financeiro</a>
+  <a class="nav-link" href="/views/assiduidade.html">Assiduidade</a>
+  <a class="nav-link active" href="/views/perfil.html">Perfil</a>
+  <a class="nav-link" href="/views/configuracoes.html">Configurações</a>
+</nav>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn" type="button">Sair</button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <div class="page">
+
+<section class="card" style="margin-bottom:16px;">
+  <h2 style="margin-bottom:6px;">Dados do administrador</h2>
+  <p style="color:var(--text-muted); font-size:14px;">
+    Gerencie as informações básicas da sua conta.
+  </p>
+</section>
+
+<section class="card" style="margin-bottom:16px;">
+  <form id="perfilForm">
+    <div class="form-grid">
+      <div class="form-row">
+        <label for="perfil_nome">Nome</label>
+        <input id="perfil_nome" type="text" placeholder="Carregando..." required />
+      </div>
+
+      <div class="form-row">
+        <label for="perfil_email">E-mail</label>
+        <input id="perfil_email" type="text" placeholder="Carregando..." readonly />
+      </div>
+
+      <div class="form-row">
+        <label for="perfil_id">Código do administrador</label>
+        <input id="perfil_id" type="text" placeholder="Carregando..." readonly />
+      </div>
+
+      <div class="form-row">
+        <label for="perfil_created_at">Conta criada em</label>
+        <input id="perfil_created_at" type="text" placeholder="Carregando..." readonly />
+      </div>
+
+      <div class="form-row form-row-full">
+        <button id="perfilSalvarNome" class="btn" type="submit">
+          Salvar nome
+        </button>
+      </div>
+    </div>
+
+    <p id="perfilMessage" style="display:none; margin-top:12px; font-size:14px;"></p>
+  </form>
+</section>
+
+<section class="card">
+  <h2 style="margin-bottom:6px;">Alterar senha</h2>
+  <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">
+    Para sua segurança, informe a senha atual antes de criar uma nova senha.
+  </p>
+
+  <form id="perfilSenhaForm">
+    <div class="form-row form-row-full">
+  <label for="perfil_senha_atual">Senha atual</label>
+
+  <div class="password-wrapper">
+    <input id="perfil_senha_atual" type="password" placeholder="Digite sua senha atual" required />
+    <button class="toggle-password" type="button" data-target="perfil_senha_atual">
+      Mostrar
+    </button>
+  </div>
+</div>
+
+<div class="form-row">
+  <label for="perfil_nova_senha">Nova senha</label>
+
+  <div class="password-wrapper">
+    <input id="perfil_nova_senha" type="password" placeholder="Mínimo 6 caracteres" required />
+    <button class="toggle-password" type="button" data-target="perfil_nova_senha">
+      Mostrar
+    </button>
+  </div>
+</div>
+
+<div class="form-row">
+  <label for="perfil_confirmar_senha">Confirmar nova senha</label>
+
+  <div class="password-wrapper">
+    <input id="perfil_confirmar_senha" type="password" placeholder="Repita a nova senha" required />
+    <button class="toggle-password" type="button" data-target="perfil_confirmar_senha">
+      Mostrar
+    </button>
+  </div>
+</div>
+      <div class="form-row form-row-full">
+        <button id="perfilSalvarSenha" class="btn" type="submit">
+          Alterar senha
+        </button>
+      </div>
+    </div>
+
+    <p id="perfilSenhaMessage" style="display:none; margin-top:12px; font-size:14px;"></p>
+  </form>
+</section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts globais -->
+  <script src="/public/js/config.js"></script>
+  <script src="/public/js/auth-guard.js"></script>
+  <script src="/public/js/logout.js"></script>
+  <script src="/public/js/perfil.js"></script>
+
+</body>
+</html>

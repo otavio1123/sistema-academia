@@ -1,6 +1,4 @@
 // public/js/auth-guard.js
-const API_BASE_URL = "http://localhost:3000";
-
 (async function protectPage() {
   const token = localStorage.getItem("token");
 
@@ -11,7 +9,7 @@ const API_BASE_URL = "http://localhost:3000";
   }
 
   try {
-    const res = await fetch(`${API_BASE_URL}/me`, {
+    const res = await fetch(`${window.API_BASE_URL}/me`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`
@@ -32,7 +30,6 @@ const API_BASE_URL = "http://localhost:3000";
 
   } catch (err) {
     console.error("AUTH GUARD ERROR:", err);
-    // Em caso de falha de conexão, por segurança volta ao login
     window.location.href = "/views/login.html";
   }
 })();

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro</title>
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="card auth-card">
+      <h1>Cadastrar</h1>
+
+      <form id="register-form">
+        <input id="nome" type="text" placeholder="Nome" required />
+        <input id="email" type="email" placeholder="E-mail" required />
+
+        <div class="password-wrapper">
+          <input id="password" type="password" placeholder="Senha" required />
+
+          <button 
+            id="toggle-password" 
+            class="toggle-password" 
+            type="button"
+          >
+            Mostrar
+          </button>
+        </div>
+
+        <div class="password-wrapper">
+          <input id="password2" type="password" placeholder="Confirmar senha" required />
+
+          <button 
+            id="toggle-password2" 
+            class="toggle-password" 
+            type="button"
+          >
+            Mostrar
+          </button>
+        </div>
+
+        <label class="lgpd-label">
+          <input id="lgpd-consent" type="checkbox">
+          <span>
+            Declaro estar ciente de que meus dados serão utilizados para criação da conta administrativa e operação do sistema de gestão da academia.
+          </span>
+        </label>
+
+        <button type="submit" class="btn btn-large">Criar conta</button>
+
+        <p id="register-error" style="display:none; margin-top:12px; color:#ff4d4d; font-size:14px;"></p>
+        <p id="register-success" style="display:none; margin-top:12px; color:#3ddc84; font-size:14px;"></p>
+
+        <p class="auth-footer">
+          Já tem conta? <a href="/views/login.html">Entrar</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script src="/public/js/config.js"></script>
+  <script src="/public/js/cadastro.js"></script>
+</body>
+</html>

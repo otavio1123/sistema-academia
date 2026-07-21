@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assiduidade</title>
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-title">Gestão Academia</span>
+      </div>
+
+      <nav class="sidebar-nav">
+
+  <a class="nav-link" href="/views/dashboard.html">Dashboard</a>
+  <a class="nav-link" href="/views/planos.html">Planos</a>
+  <a class="nav-link" href="/views/alunos.html">Alunos</a>
+  <a class="nav-link" href="/views/financeiro.html">Financeiro</a>
+  <a class="nav-link active" href="/views/assiduidade.html">Assiduidade</a>
+  <a class="nav-link" href="/views/perfil.html">Perfil</a>
+  <a class="nav-link" href="/views/configuracoes.html">Configurações</a>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn" type="button">Sair</button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <div class="page">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <h1 class="page-title">Assiduidade</h1>
+        <span class="topbar-muted">Admin</span>
+      </header>
+
+      <!-- MAIN -->
+      <main class="main">
+
+        <!-- AÇÕES -->
+        <section class="card" style="margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>
+              <h2>Controle de Presença</h2>
+              <p style="color:var(--text-muted); font-size:14px;">
+                Registre e acompanhe a frequência dos alunos.
+              </p>
+            </div>
+
+            <button id="btnNovaPresenca" class="btn" type="button">
+              + Registrar presença
+            </button>
+          </div>
+        </section>
+
+        <!-- FILTROS -->
+        <section class="card filters-card" style="margin-bottom:16px;">
+          <h3 class="filters-title">Filtros</h3>
+
+          <div class="filters-wrap">
+            <div class="filters-row">
+              <select id="filterAluno" style="min-width:220px;">
+                <option value="">Aluno</option>
+              </select>
+
+<input id="filterData" type="date" />
+
+<select id="filterStatus">
+  <option value="">Status</option>
+  <option value="true">Presente</option>
+  <option value="false">Faltou</option>
+</select>
+
+<button id="btnFilterAttendance" class="btn" type="button">
+  Filtrar
+</button>
+
+<button id="btnClearAttendance" class="btn btn-ghost" type="button">
+  Limpar filtros
+</button>
+            </div>
+          </div>
+        </section>
+<!-- RESUMO ASSIDUIDADE -->
+<section class="grid-cards" style="margin-bottom:16px;">
+  <div class="card">
+    <h3>Presenças</h3>
+    <p id="assiduidadeResumoPresencas" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Faltas</h3>
+    <p id="assiduidadeResumoFaltas" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Frequência</h3>
+    <p id="assiduidadeResumoFrequencia" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0%
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Total de registros</h3>
+    <p id="assiduidadeResumoTotal" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0
+    </p>
+  </div>
+</section>
+        <!-- LISTA -->
+        <section class="card">
+          <h3 style="margin-bottom:12px;">Registros de assiduidade</h3>
+
+          <div style="overflow:auto;">
+            <table id="attendanceTable" style="width:100%; min-width:900px; border-collapse:collapse;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border); text-align:left;">
+                  <th style="padding:12px;">ID</th>
+                  <th style="padding:12px;">Data</th>
+                  <th style="padding:12px;">Aluno</th>
+                  <th style="padding:12px;">Status</th>
+                  <th style="padding:12px;">Observação</th>
+                  <th style="padding:12px;">Ações</th>
+                </tr>
+              </thead>
+
+              <tbody id="attendanceTbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL ASSIDUIDADE -->
+  <div id="attendanceModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="attendanceModalTitle">Registrar presença</h3>
+        <button id="attendanceModalClose" class="btn-ghost" type="button">Fechar</button>
+      </div>
+
+      <form id="attendanceForm">
+        <div class="modal-body">
+          <input id="attendance_id" type="hidden" />
+
+          <div class="form-grid">
+            <div class="form-row form-row-full">
+              <label for="attendance_student_id">Aluno</label>
+              <select id="attendance_student_id" required>
+                <option value="" disabled selected>Carregando alunos...</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="attendance_data">Data</label>
+              <input id="attendance_data" type="date" required />
+            </div>
+
+            <div class="form-row">
+              <label for="attendance_presente">Status</label>
+              <select id="attendance_presente" required>
+                <option value="true">Presente</option>
+                <option value="false">Faltou</option>
+              </select>
+            </div>
+
+            <div class="form-row form-row-full">
+              <label for="attendance_observacao">Observação</label>
+              <textarea id="attendance_observacao" rows="4" placeholder="Opcional"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="attendanceCancel" class="btn-ghost" type="button">Cancelar</button>
+          <button id="attendanceSubmit" class="btn" type="submit">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts globais -->
+  <script src="/public/js/config.js"></script>
+  <script src="/public/js/auth-guard.js"></script>
+  <script src="/public/js/logout.js"></script>
+
+  <!-- Script do módulo -->
+  <script src="/public/js/assiduidade.js"></script>
+
+</body>
+</html>

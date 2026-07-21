@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Financeiro</title>
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-title">Gestão Academia</span>
+      </div>
+
+      <nav class="sidebar-nav">
+<a class="nav-link" href="/views/dashboard.html">Dashboard</a>
+<a class="nav-link" href="/views/planos.html">Planos</a>
+<a class="nav-link" href="/views/alunos.html">Alunos</a>
+<a class="nav-link active" href="/views/financeiro.html">Financeiro</a>
+<a class="nav-link" href="/views/assiduidade.html">Assiduidade</a>
+<a class="nav-link" href="/views/perfil.html">Perfil</a>
+<a class="nav-link" href="/views/configuracoes.html">Configurações</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn" type="button">Sair</button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <div class="page">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <h1 class="page-title">Financeiro</h1>
+        <span class="topbar-muted">Admin</span>
+      </header>
+
+      <!-- MAIN -->
+      <main class="main">
+
+        <!-- AÇÕES -->
+        <section class="card" style="margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>
+              <h2>Pagamentos</h2>
+              <p style="color:var(--text-muted); font-size:14px;">
+                Registre e acompanhe os pagamentos dos alunos.
+              </p>
+            </div>
+
+            <button id="btnNovoPagamento" class="btn" type="button">
+              + Registrar pagamento
+            </button>
+          </div>
+        </section>
+
+        <!-- FILTROS -->
+        <section class="card filters-card" style="margin-bottom:16px;">
+          <h3 class="filters-title">Filtros</h3>
+
+          <div class="filters-wrap">
+            <div class="filters-row">
+              <select id="filterMonth">
+                <option value="">Mês</option>
+              </select>
+
+              <select id="filterYear">
+                <option value="">Ano</option>
+              </select>
+
+              <select id="filterStatus">
+                <option value="">Status</option>
+                <option value="PAGO">Pago</option>
+                <option value="PENDENTE">Pendente</option>
+              </select>
+              <select id="filterForma">
+  <option value="">Forma</option>
+  <option value="PIX">PIX</option>
+  <option value="DINHEIRO">Dinheiro</option>
+  <option value="CARTAO">Cartão</option>
+  <option value="TRANSFERENCIA">Transferência</option>
+  <option value="BOLETO">Boleto</option>
+  <option value="OUTRO">Outro</option>
+</select>
+
+              <button id="btnFilterPayments" class="btn" type="button">
+                Filtrar
+              </button>
+              <button id="btnClearPayments" class="btn btn-ghost" type="button">
+  Limpar filtros
+</button>
+            </div>
+          </div>
+        </section>
+
+<!-- RESUMO FINANCEIRO -->
+<section class="grid-cards" style="margin-bottom:16px;">
+  <div class="card">
+    <h3>Recebido no filtro</h3>
+    <p id="financeiroResumoRecebido" style="font-size:26px; font-weight:800; margin-top:8px;">
+      R$ 0,00
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Pendente no filtro</h3>
+    <p id="financeiroResumoPendente" style="font-size:26px; font-weight:800; margin-top:8px;">
+      R$ 0,00
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Pagos</h3>
+    <p id="financeiroResumoPagos" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Pendentes</h3>
+    <p id="financeiroResumoPendentes" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0
+    </p>
+  </div>
+</section>
+
+<!-- LISTA -->
+<section class="card" style="margin-bottom:16px;">
+  <h3 style="margin-bottom:12px;">Lista de pagamentos</h3>
+
+  <div style="overflow:auto;">
+<table id="paymentsTable" style="width:100%; min-width:1000px; border-collapse:collapse;">
+        <thead>
+        <tr style="border-bottom:1px solid var(--border); text-align:left;">
+          <th style="padding:12px;">ID</th>
+          <th style="padding:12px;">Aluno</th>
+          <th style="padding:12px;">Mês/Ano</th>
+          <th style="padding:12px;">Valor</th>
+       <th style="padding:12px;">Forma</th>
+<th style="padding:12px;">Data pagamento</th>
+<th style="padding:12px;">Status</th>
+<th style="padding:12px;">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody id="paymentsTbody"></tbody>
+    </table>
+  </div>
+</section>
+      </main>
+    </div>
+  </div>
+<!-- MODAL PAGAMENTO -->
+<div id="pagamentoModal" class="modal" aria-hidden="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="pagamentoModalTitle">Registrar pagamento</h3>
+      <button id="pagamentoModalClose" class="btn-ghost" type="button">Fechar</button>
+    </div>
+
+    <form id="pagamentoForm">
+      <div class="modal-body">
+        <input id="pagamento_id" type="hidden" />
+
+        <div class="form-grid">
+<div class="form-row form-row-full">
+  <label for="pagamento_student_id">Aluno</label>
+  <select id="pagamento_student_id" required>
+    <option value="" disabled selected>Carregando alunos...</option>
+  </select>
+
+  <small id="paymentPlanInfo" class="payment-plan-info">
+    Selecione um aluno para ver o plano.
+  </small>
+</div>
+<div class="form-row">
+  <label for="pagamento_mes">Mês</label>
+  <select id="pagamento_mes" required>
+    <option value="" selected disabled>Selecione</option>
+    <option value="1">Janeiro</option>
+    <option value="2">Fevereiro</option>
+    <option value="3">Março</option>
+    <option value="4">Abril</option>
+    <option value="5">Maio</option>
+    <option value="6">Junho</option>
+    <option value="7">Julho</option>
+    <option value="8">Agosto</option>
+    <option value="9">Setembro</option>
+    <option value="10">Outubro</option>
+    <option value="11">Novembro</option>
+    <option value="12">Dezembro</option>
+  </select>
+</div>
+
+          <div class="form-row">
+            <label for="pagamento_ano">Ano</label>
+            <input id="pagamento_ano" type="number" min="2000" max="2100" required />
+          </div>
+
+          <div class="form-row">
+            <label for="pagamento_valor">Valor (R$)</label>
+            <input id="pagamento_valor" type="number" step="0.01" min="0" required />
+          </div>
+
+          <div class="form-row">
+            <label for="pagamento_forma_pagamento">Forma de pagamento</label>
+            <select id="pagamento_forma_pagamento">
+              <option value="">Selecione</option>
+              <option value="PIX">PIX</option>
+              <option value="DINHEIRO">Dinheiro</option>
+              <option value="CARTAO">Cartão</option>
+              <option value="TRANSFERENCIA">Transferência</option>
+              <option value="BOLETO">Boleto</option>
+              <option value="OUTRO">Outro</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="pagamento_status">Status</label>
+            <select id="pagamento_status" required>
+              <option value="PAGO">Pago</option>
+              <option value="PENDENTE">Pendente</option>
+            </select>
+          </div>
+
+          <div class="form-row form-row-full">
+            <label for="pagamento_observacao">Observação</label>
+            <textarea id="pagamento_observacao" rows="4" placeholder="Opcional"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="pagamentoCancel" class="btn-ghost" type="button">Cancelar</button>
+        <button id="pagamentoSubmit" class="btn" type="submit">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- MODAL WHATSAPP -->
+<div id="whatsappModal" class="modal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="whatsappModalTitle">
+    <div class="modal-header">
+      <h3 id="whatsappModalTitle" style="margin:0;">Enviar WhatsApp</h3>
+      <button id="whatsappModalClose" class="btn-ghost" type="button">Fechar</button>
+    </div>
+
+    <div class="modal-body">
+      <input id="whatsapp_payment_id" type="hidden" />
+
+      <div class="whatsapp-modal-grid">
+        <div class="whatsapp-template-list">
+          <button class="btn-ghost whatsapp-template-btn active" type="button" data-template="vencimento">
+            Lembrete de vencimento
+          </button>
+
+          <button class="btn-ghost whatsapp-template-btn" type="button" data-template="vencido">
+            Pagamento vencido
+          </button>
+
+          <button class="btn-ghost whatsapp-template-btn" type="button" data-template="confirmacao">
+            Confirmação de pagamento
+          </button>
+
+          <button class="btn-ghost whatsapp-template-btn" type="button" data-template="personalizada">
+            Personalizada
+          </button>
+        </div>
+
+        <div class="form-row">
+          <label for="whatsappMessageText">Mensagem</label>
+          <textarea id="whatsappMessageText" rows="9" placeholder="Digite a mensagem"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button id="whatsappCancel" class="btn-ghost" type="button">Cancelar</button>
+      <button id="whatsappSend" class="btn" type="button">Enviar pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+  <!-- Scripts globais -->
+  <script src="/public/js/config.js"></script>
+  <script src="/public/js/auth-guard.js"></script>
+  <script src="/public/js/logout.js"></script>
+
+  <!-- Script do módulo -->
+  <script src="/public/js/financeiro.js"></script>
+
+</body>
+</html>

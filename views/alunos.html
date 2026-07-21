@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alunos</title>
+  <link rel="stylesheet" href="/public/css/style.css">
+
+
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-title">Gestão Academia</span>
+      </div>
+
+      <nav class="sidebar-nav">
+<a class="nav-link" href="/views/dashboard.html">Dashboard</a>
+<a class="nav-link" href="/views/planos.html">Planos</a>
+<a class="nav-link active" href="/views/alunos.html">Alunos</a>
+<a class="nav-link" href="/views/financeiro.html">Financeiro</a>
+<a class="nav-link" href="/views/assiduidade.html">Assiduidade</a>
+<a class="nav-link" href="/views/perfil.html">Perfil</a>
+<a class="nav-link" href="/views/configuracoes.html">Configurações</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn" type="button">Sair</button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <div class="page">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <h1 class="page-title">Alunos</h1>
+        <span class="topbar-muted">Admin</span>
+      </header>
+
+      <!-- MAIN -->
+      <main class="main">
+
+     <section class="card" style="margin-bottom:16px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+    <div>
+      <h2>Gerenciar Alunos</h2>
+      <p style="color:var(--text-muted); font-size:14px;">
+        Cadastre e gerencie os alunos da academia.
+      </p>
+    </div>
+
+    <button id="btnNovoAluno" class="btn" type="button">+ Novo aluno</button>
+  </div>
+</section>
+
+<!-- FILTROS -->
+<section class="card filters-card" style="margin-bottom:16px;">
+  <h3 class="filters-title">Filtros</h3>
+
+  <div class="filters-wrap">
+    <div class="filters-row">
+      <input id="filterStudentSearch" type="text" placeholder="Buscar por nome, CPF ou telefone" />
+
+      <select id="filterStudentStatus">
+        <option value="">Status</option>
+        <option value="ativo">Ativo</option>
+        <option value="inativo">Inativo</option>
+      </select>
+
+      <button id="btnFilterStudents" class="btn" type="button">
+        Filtrar
+      </button>
+
+      <button id="btnClearStudents" class="btn btn-ghost" type="button">
+        Limpar filtros
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- RESUMO ALUNOS -->
+<section class="grid-cards" style="margin-bottom:16px;">
+  <div class="card">
+    <h3>Alunos ativos</h3>
+    <p id="alunosResumoAtivos" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Alunos inativos</h3>
+    <p id="alunosResumoInativos" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Total de alunos</h3>
+    <p id="alunosResumoTotal" style="font-size:26px; font-weight:800; margin-top:8px;">
+      0
+    </p>
+  </div>
+</section>
+        <!-- LISTA -->
+        <section class="card">
+          <h3 style="margin-bottom:12px;">Lista de alunos</h3>
+
+          <div style="overflow:auto;">
+            <table id="studentsTable" style="width:100%; min-width:980px; border-collapse:collapse;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border); text-align:left;">
+                  <th style="padding:12px;">ID</th>
+                  <th style="padding:12px;">Nome</th>
+<th style="padding:12px;">CPF</th>
+<th style="padding:12px;">Telefone</th>
+<th style="padding:12px;">Plano</th>
+                  <th style="padding:12px;">Início</th>
+                  <th style="padding:12px;">Status</th>
+                  <th style="padding:12px;">Ações</th>
+                </tr>
+              </thead>
+
+              <!-- ID necessário pro JS -->
+              <tbody id="studentsTbody"></tbody>
+            </table>
+          </div>
+
+
+        </section>
+
+      </main>
+    </div>
+  </div>
+<!-- MODAL ALUNO -->
+<div id="alunoModal" class="modal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="alunoModalTitle">
+    <div class="modal-header">
+      <h3 id="alunoModalTitle" style="margin:0;">Novo Aluno</h3>
+      <button id="alunoModalClose" class="btn-ghost" type="button">Fechar</button>
+    </div>
+
+    <form id="alunoForm">
+      <div class="modal-body">
+        <input id="aluno_id" type="hidden" />
+
+        <div class="form-grid">
+          <div class="form-row form-row-full">
+            <label for="aluno_nome">Nome</label>
+            <input id="aluno_nome" type="text" placeholder="Nome completo" autocomplete="name" required />
+          </div>
+
+<div class="form-row">
+  <label for="aluno_cpf">CPF</label>
+  <input id="aluno_cpf" type="text" placeholder="Somente números" inputmode="numeric" required />
+</div>
+
+<div class="form-row">
+  <label for="aluno_telefone">Telefone</label>
+  <input id="aluno_telefone" type="text" placeholder="11999999999" inputmode="tel" />
+</div>
+
+<div class="form-row">
+  <label for="aluno_data_inicio">Data de início</label>
+
+            <div class="date-input">
+              <input id="aluno_data_inicio" type="date" required />
+              <button type="button" class="date-btn" aria-label="Abrir calendário">📅</button>
+            </div>
+          </div>
+
+          <div class="form-row form-row-full">
+            <label for="aluno_plano_id">Plano</label>
+            <select id="aluno_plano_id" required>
+              <option value="" disabled selected>Carregando planos...</option>
+            </select>
+          </div>
+
+          <div class="form-row form-row-full">
+            <label class="aluno-ativo-label" for="aluno_ativo">
+              <input id="aluno_ativo" type="checkbox" checked />
+              <span>Aluno ativo</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-ghost" type="button" id="alunoCancel">Cancelar</button>
+        <button id="alunoSubmit" class="btn" type="submit">Salvar alterações</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- MODAL WHATSAPP -->
+<div id="whatsappModal" class="modal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="whatsappModalTitle">
+    <div class="modal-header">
+      <h3 id="whatsappModalTitle" style="margin:0;">Enviar WhatsApp</h3>
+      <button id="whatsappModalClose" class="btn-ghost" type="button">Fechar</button>
+    </div>
+
+    <div class="modal-body">
+      <input id="whatsapp_student_id" type="hidden" />
+
+      <div class="whatsapp-modal-grid">
+        <div class="whatsapp-template-list">
+          <button class="btn-ghost whatsapp-template-btn active" type="button" data-template="geral">
+            Mensagem geral
+          </button>
+
+          <button class="btn-ghost whatsapp-template-btn" type="button" data-template="vencimento">
+            Lembrete de vencimento
+          </button>
+
+          <button class="btn-ghost whatsapp-template-btn" type="button" data-template="vencido">
+            Pagamento vencido
+          </button>
+
+          <button class="btn-ghost whatsapp-template-btn" type="button" data-template="personalizada">
+            Personalizada
+          </button>
+        </div>
+
+        <div class="form-row">
+          <label for="whatsappMessageText">Mensagem</label>
+          <textarea id="whatsappMessageText" rows="9" placeholder="Digite a mensagem"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button id="whatsappCancel" class="btn-ghost" type="button">Cancelar</button>
+      <button id="whatsappSend" class="btn" type="button">Enviar pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+<!-- Scripts globais -->
+<script src="/public/js/config.js"></script>
+<script src="/public/js/auth-guard.js"></script>
+<script src="/public/js/logout.js"></script>
+
+<!-- Script do módulo alunos -->
+<script src="/public/js/alunos.js"></script>
+</body>
+</html>

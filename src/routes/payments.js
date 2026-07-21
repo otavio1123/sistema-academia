@@ -57,25 +57,30 @@ router.get("/", auth, async (req, res) => {
     if (paid === "true") where.push(`p.data_pagamento IS NOT NULL`);
     if (paid === "false") where.push(`p.data_pagamento IS NULL`);
 
-    const sql = `
-      SELECT
-        p.id,
-        p.student_id,
-        s.nome_completo AS student_nome,
-        p.mes,
-        p.ano,
-        p.valor,
-        p.forma_pagamento,
-        p.data_pagamento,
-        p.created_at,
-        p.created_by,
-        a.nome AS admin_nome
-      FROM public.payments p
-      JOIN public.students s ON s.id = p.student_id
-      JOIN public.admins a ON a.id = p.created_by
-      ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
-      ORDER BY p.ano DESC, p.mes DESC, p.id DESC
-    `;
+const sql = `
+  SELECT
+    p.id,
+    p.student_id,
+    s.nome_completo AS student_nome,
+    s.telefone AS student_telefone,
+    s.data_inicio AS student_data_inicio,
+    s.plan_id AS plano_id,
+    pl.nome AS plano_nome,
+    p.mes,
+    p.ano,
+    p.valor,
+    p.forma_pagamento,
+    p.data_pagamento,
+    p.created_at,
+    p.created_by,
+    a.nome AS admin_nome
+  FROM public.payments p
+  JOIN public.students s ON s.id = p.student_id
+  LEFT JOIN public.plans pl ON pl.id = s.plan_id
+  JOIN public.admins a ON a.id = p.created_by
+  ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
+  ORDER BY p.ano DESC, p.mes DESC, p.id DESC
+`;
 
     const result = await db.query(sql, params);
     return res.json(result.rows);
@@ -95,21 +100,26 @@ router.get("/:id", auth, async (req, res) => {
 
     const result = await db.query(
       `
-      SELECT
-        p.id,
-        p.student_id,
-        s.nome_completo AS student_nome,
-        p.mes,
-        p.ano,
-        p.valor,
-        p.forma_pagamento,
-        p.data_pagamento,
-        p.created_at,
-        p.created_by,
-        a.nome AS admin_nome
-      FROM public.payments p
-      JOIN public.students s ON s.id = p.student_id
-      JOIN public.admins a ON a.id = p.created_by
+SELECT
+  p.id,
+  p.student_id,
+  s.nome_completo AS student_nome,
+  s.telefone AS student_telefone,
+  s.data_inicio AS student_data_inicio,
+  s.plan_id AS plano_id,
+  pl.nome AS plano_nome,
+  p.mes,
+  p.ano,
+  p.valor,
+  p.forma_pagamento,
+  p.data_pagamento,
+  p.created_at,
+  p.created_by,
+  a.nome AS admin_nome
+FROM public.payments p
+JOIN public.students s ON s.id = p.student_id
+LEFT JOIN public.plans pl ON pl.id = s.plan_id
+JOIN public.admins a ON a.id = p.created_by
       WHERE p.id = $1
       `,
       [id]
@@ -155,14 +165,42 @@ router.post("/", auth, async (req, res) => {
 
     const adminId = toInt(req.user?.adminId);
     if (!adminId) return res.status(401).json({ ok: false, error: "Token sem adminId." });
+// valida se aluno existe e está ativo
+const studentCheck = await db.query(
+  "SELECT id, ativo FROM public.students WHERE id = $1",
+  [sid]
+);
 
-    // valida se aluno existe e está ativo
-    const studentCheck = await db.query("SELECT id, ativo FROM public.students WHERE id = $1", [sid]);
-    if (studentCheck.rows.length === 0) return res.status(400).json({ ok: false, error: "student_id não existe." });
-    if (studentCheck.rows[0].ativo !== true) return res.status(400).json({ ok: false, error: "Aluno inativo não pode receber pagamento." });
+if (studentCheck.rows.length === 0) {
+  return res.status(400).json({ ok: false, error: "student_id não existe." });
+}
 
-    // Insere
-    const result = await db.query(
+if (studentCheck.rows[0].ativo !== true) {
+  return res.status(400).json({ ok: false, error: "Aluno inativo não pode receber pagamento." });
+}
+
+// evita pagamento duplicado para o mesmo aluno no mesmo mês/ano
+const paymentCheck = await db.query(
+  `
+  SELECT id
+  FROM public.payments
+  WHERE student_id = $1
+    AND mes = $2
+    AND ano = $3
+  LIMIT 1
+  `,
+  [sid, m, y]
+);
+
+if (paymentCheck.rows.length > 0) {
+  return res.status(409).json({
+    ok: false,
+    error: "Já existe um pagamento registrado para este aluno neste mês/ano.",
+  });
+}
+
+// Insere
+const result = await db.query(
       `
       INSERT INTO public.payments (student_id, mes, ano, valor, forma_pagamento, data_pagamento, created_by)
       VALUES ($1, $2, $3, $4, $5, $6, $7)

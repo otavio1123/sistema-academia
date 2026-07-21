@@ -1,17 +1,19 @@
 // public/js/login.js
 
-const API_BASE_URL = "http://localhost:3000";
-
 const form = document.getElementById("login-form");
 const emailInput = document.getElementById("email");
 const senhaInput = document.getElementById("password");
 const errorEl = document.getElementById("login-error");
+
+const togglePasswordBtn = document.getElementById("toggle-password");
+const lgpdConsent = document.getElementById("lgpd-consent");
 
 function mostrarErro(msg) {
   if (!errorEl) {
     alert(msg);
     return;
   }
+
   errorEl.innerText = msg;
   errorEl.style.display = "block";
 }
@@ -21,6 +23,16 @@ function limparErro() {
     errorEl.innerText = "";
     errorEl.style.display = "none";
   }
+}
+
+// Mostrar / ocultar senha
+if (togglePasswordBtn && senhaInput) {
+  togglePasswordBtn.addEventListener("click", () => {
+    const senhaOculta = senhaInput.type === "password";
+
+    senhaInput.type = senhaOculta ? "text" : "password";
+    togglePasswordBtn.innerText = senhaOculta ? "Ocultar" : "Mostrar";
+  });
 }
 
 form.addEventListener("submit", async (e) => {
@@ -35,8 +47,13 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
+  if (lgpdConsent && !lgpdConsent.checked) {
+    mostrarErro("Para acessar o sistema, é necessário aceitar o aviso de uso de dados.");
+    return;
+  }
+
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(`${window.API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -51,12 +68,9 @@ form.addEventListener("submit", async (e) => {
       return;
     }
 
-    // Salva token
     localStorage.setItem("token", data.token);
 
-    // Redireciona para o dashboard
     window.location.href = "/views/dashboard.html";
-
   } catch (err) {
     console.error("ERRO LOGIN:", err);
     mostrarErro("Erro ao conectar com o servidor.");

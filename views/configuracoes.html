@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Configurações</title>
+  <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="brand-title">Gestão Academia</span>
+      </div>
+
+<nav class="sidebar-nav">
+  <a class="nav-link" href="/views/dashboard.html">Dashboard</a>
+  <a class="nav-link" href="/views/planos.html">Planos</a>
+  <a class="nav-link" href="/views/alunos.html">Alunos</a>
+  <a class="nav-link" href="/views/financeiro.html">Financeiro</a>
+  <a class="nav-link" href="/views/assiduidade.html">Assiduidade</a>
+  <a class="nav-link" href="/views/perfil.html">Perfil</a>
+  <a class="nav-link active" href="/views/configuracoes.html">Configurações</a>
+</nav>
+
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn" type="button">Sair</button>
+      </div>
+    </aside>
+
+    <div class="page">
+
+      <header class="topbar">
+        <h1 class="page-title">Configurações</h1>
+        <span class="topbar-muted">Admin</span>
+      </header>
+
+      <main class="main">
+
+        <section class="card" style="margin-bottom:16px;">
+          <h2>Mensagens do WhatsApp</h2>
+          <p style="color:var(--text-muted); font-size:14px; margin-top:6px;">
+            Edite os modelos de mensagem usados no envio pelo WhatsApp.
+          </p>
+        </section>
+<section class="card settings-help-card" style="margin-bottom:16px;">
+  <h3>Como funciona</h3>
+
+  <p>
+    Use os campos automáticos entre chaves para personalizar a mensagem.
+    Na hora de enviar pelo WhatsApp, o sistema troca esses campos pelos dados reais do aluno.
+  </p>
+
+  <div class="settings-example">
+    <strong>Exemplo:</strong><br>
+    Olá, <code>{nome}</code>! Sua mensalidade vence em <code>{data_vencimento}</code>.
+    <br><br>
+    <strong>Resultado:</strong><br>
+    Olá, Carlos! Sua mensalidade vence em 12/08/2026.
+  </div>
+</section>
+        <section class="card">
+          <form id="configuracoesForm">
+
+            <div class="form-row form-row-full" style="margin-bottom:16px;">
+              <label for="msgGeral">Mensagem geral</label>
+              <textarea id="msgGeral" class="settings-textarea" rows="6"></textarea>
+            </div>
+<div class="settings-token-row">
+  <span>Inserir:</span>
+  <button type="button" class="settings-token" data-target="msgGeral" data-token="{nome}">Nome</button>
+  <button type="button" class="settings-token" data-target="msgGeral" data-token="{plano}">Plano</button>
+</div>
+            <div class="form-row form-row-full" style="margin-bottom:16px;">
+              <label for="msgLembrete">Lembrete de vencimento</label>
+              <textarea id="msgLembrete" class="settings-textarea" rows="7"></textarea>
+            </div>
+<div class="settings-token-row">
+  <span>Inserir:</span>
+  <button type="button" class="settings-token" data-target="msgLembrete" data-token="{nome}">Nome</button>
+  <button type="button" class="settings-token" data-target="msgLembrete" data-token="{plano}">Plano</button>
+  <button type="button" class="settings-token" data-target="msgLembrete" data-token="{data_vencimento}">Data de vencimento</button>
+  <button type="button" class="settings-token" data-target="msgLembrete" data-token="{valor}">Valor</button>
+</div>
+            <div class="form-row form-row-full" style="margin-bottom:16px;">
+              <label for="msgVencido">Pagamento vencido</label>
+              <textarea id="msgVencido" class="settings-textarea" rows="7"></textarea>
+            </div>
+<div class="settings-token-row">
+  <span>Inserir:</span>
+  <button type="button" class="settings-token" data-target="msgVencido" data-token="{nome}">Nome</button>
+  <button type="button" class="settings-token" data-target="msgVencido" data-token="{plano}">Plano</button>
+  <button type="button" class="settings-token" data-target="msgVencido" data-token="{data_vencimento}">Data de vencimento</button>
+  <button type="button" class="settings-token" data-target="msgVencido" data-token="{valor}">Valor</button>
+</div>
+            <div class="form-row form-row-full" style="margin-bottom:16px;">
+              <label for="msgConfirmacao">Confirmação de pagamento</label>
+              <textarea id="msgConfirmacao" class="settings-textarea" rows="6"></textarea>
+              <div class="settings-token-row">
+  <span>Inserir:</span>
+  <button type="button" class="settings-token" data-target="msgConfirmacao" data-token="{nome}">Nome</button>
+  <button type="button" class="settings-token" data-target="msgConfirmacao" data-token="{valor}">Valor</button>
+  <button type="button" class="settings-token" data-target="msgConfirmacao" data-token="{mes}">Mês</button>
+  <button type="button" class="settings-token" data-target="msgConfirmacao" data-token="{ano}">Ano</button>
+</div>
+            </div>
+
+            <button id="btnSalvarConfiguracoes" class="btn" type="submit">
+              Salvar configurações
+            </button>
+
+            <p id="configuracoesMessage" style="display:none; margin-top:12px; font-size:14px;"></p>
+
+          </form>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="/public/js/config.js"></script>
+  <script src="/public/js/auth-guard.js"></script>
+  <script src="/public/js/logout.js"></script>
+  <script src="/public/js/configuracoes.js"></script>
+</body>
+</html>
